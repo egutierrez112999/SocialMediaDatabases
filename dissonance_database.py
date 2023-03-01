@@ -92,6 +92,13 @@ class DissDB:
 
 
     def joinServer(self, user_id, server_id, server_name):
+        sdata = [server_id]
+        self.cursor.execute("SELECT user_id FROM blacklist WHERE server_id = ?", sdata)
+        blacklisted_users = self.cursor.fetchall()
+        for i in blacklisted_users:
+            if i[0] == user_id:
+                print("Cannot Join Because You have Been Banned")
+                return
         server_members = self.getServerMembers(server_id)
         member = False
         for i in server_members:
@@ -152,6 +159,6 @@ db = DissDB()
 #db.createPost(1000, 20020, "I love fruit")
 #print(db.getFeedChannel(1000, 'discussion'))
 
-#db.joinServer(1002,2002, 'research_seminar')
+db.joinServer(1002,2002, 'research_seminar')
 #db.likeDislikePost(3000, 1002 ,1);
 #db.likeDislikePost(3000, 1002 ,0);
