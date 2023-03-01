@@ -15,7 +15,7 @@ cur.execute("DROP TABLE friends")
 cur.execute("CREATE TABLE IF NOT EXISTS servers (server_id INTEGER, server_name TEXT,user_id INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, username TEXT, email TEXT, date_created TEXT, password TEXT)")
 cur.execute("CREATE TABLE IF NOT EXISTS posts (post_id INTEGER PRIMARY KEY, channel_id INTEGER, server_id INTEGER, user_id INTEGER, message TEXT, timestamp VARCHAR(30))")
-cur.execute("CREATE TABLE IF NOT EXISTS likes (post_id INTEGER PRIMARY KEY, user_id INTEGER, like INTEGER, dislike INTEGER)")
+cur.execute("CREATE TABLE IF NOT EXISTS likes (post_id INTEGER, user_id INTEGER, like INTEGER, dislike INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS blacklist (server_ID INTEGER, user_id INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS owners (server_id INTEGER PRIMARY KEY, user_id INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS friends (user_id INTEGER, friend_user_id INTEGER)")
@@ -71,11 +71,18 @@ cur.execute("INSERT INTO blacklist (server_id, user_id) VALUES (2001, 1004)")
 con.commit()
 
 #insert channels
-cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20010, 'teachers', 2001)")
-cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20011, 'students', 2001)")
-cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20012, 'supervisors', 2001)")
+cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20000, 'teachers', 2000)")
+cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20001, 'students', 2000)")
+cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20002, 'supervisors', 2000)")
+cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20010, 'discussion', 2001)")
 con.commit()
 
 #insert posts
-
+cur.execute("INSERT INTO posts (post_id, channel_id, server_id, user_id, message, timestamp) VALUES (3000, 20010, 2001, 1000, 'That paper was really good! I loved it!', '1677698679')")
+con.commit()
 #insert likes
+cur.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (3000, 1003, 1, 0)")
+cur.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (3000, 1005, 1, 0)")
+cur.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (3000, 1001, 0, 1)")
+con.commit()
+
