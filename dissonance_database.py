@@ -1,6 +1,7 @@
 #This will be our python file for creating queries
 import sqlite3
 import random
+import time
 
 class DissDB:
 
@@ -37,14 +38,44 @@ class DissDB:
         friends = self.cursor.fetchall()
         return friends
         
-    def createPost(self):
-        pass
 
-    def getFeedChannel(self):
-        pass
+    def createPost(self, user_id, channel_id, message):
+        cdata = [channel_id]
+        self.cursor.execute("SELECT server_id FROM channels WHERE channel_id = ?",cdata)
+        chdata = self.cursor.fetchone()
+        server_id = int(chdata[0])
+        server_members = self.getServerMembers(server_id)
+        member = False
+        for i in server_members:
+            if user_id == i[0]:
+                member = True
+        if(member):
+                post_id = random.randint(3000, 3999)
+                timestamp = time.time()
+                data = [post_id, channel_id, server_id, user_id, message, timestamp]
+                self.cursor.execute("INSERT INTO posts (post_id, channel_id, server_id, user_id, message, timestamp) VALUES (?, ?, ?, ?, ?, ?)", data)
+                self.connection.commit()
+                print("Successfully made Post")
+
 
     def likeDislikePost(self):
         pass
+
+
+    def getFeedChannel(self, user_id, channel_name):
+        cdata = [channel_name]
+        self.cursor.execute("SELECT channel_id, server_id FROM channels WHERE channel_name = ?",cdata)
+        chdata = self.cursor.fetchall()
+        server_members = self.getServerMembers(int(chdata[0][1]))
+        member = False
+        for i in server_members:
+            if user_id == i[0]:
+                member = True
+        if(member):
+                data = [chdata[0][0]]
+                self.cursor.execute("SELECT u.username, message FROM posts JOIN users AS u ON posts.user_id = u.user_id WHERE channel_id = ? ORDER BY timestamp ASC LIMIT 10", data)
+                return self.cursor.fetchall()
+
 
     def joinServer(self, user_id, server_id, server_name):
         server_members = self.getServerMembers(server_id)
@@ -100,7 +131,9 @@ db = DissDB()
 #db.addChannel(1003, 20005, 'volunteers', 2000)
 #print(db.getChannels(2000))
 
-#print(db.getServerMembers(2000))
+#print(db.getServerMembers(2002))
 #db.joinServer(1000,2000, 'cs')
 
-
+#print(db.getFeedChannel(1000, 'discussion'))
+#db.createPost(1000, 20020, "I love fruit")
+#print(db.getFeedChannel(1000, 'discussion'))

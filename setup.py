@@ -62,23 +62,23 @@ con.commit()
 
 #insert owners
 cur.execute("INSERT INTO owners (server_id, user_id) VALUES (2000, 1003)")
-cur.execute("INSERT INTO owners (server_id, user_id) VALUES (2001, 1005)")
+cur.execute("INSERT INTO owners (server_id, user_id) VALUES (2002, 1005)")
 con.commit()
 
 #insert blacklist
-cur.execute("INSERT INTO blacklist (server_id, user_id) VALUES (2001, 1002)")
-cur.execute("INSERT INTO blacklist (server_id, user_id) VALUES (2001, 1004)")
+cur.execute("INSERT INTO blacklist (server_id, user_id) VALUES (2002, 1002)")
+cur.execute("INSERT INTO blacklist (server_id, user_id) VALUES (2002, 1004)")
 con.commit()
 
 #insert channels
 cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20000, 'teachers', 2000)")
 cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20001, 'students', 2000)")
 cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20002, 'supervisors', 2000)")
-cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20010, 'discussion', 2001)")
+cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20020, 'discussion', 2002)")
 con.commit()
 
 #insert posts
-cur.execute("INSERT INTO posts (post_id, channel_id, server_id, user_id, message, timestamp) VALUES (3000, 20010, 2001, 1000, 'That paper was really good! I loved it!', '1677698679')")
+cur.execute("INSERT INTO posts (post_id, channel_id, server_id, user_id, message, timestamp) VALUES (3000, 20020, 2002, 1000, 'That paper was really good! I loved it!', '1677698679')")
 con.commit()
 #insert likes
 cur.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (3000, 1003, 1, 0)")
