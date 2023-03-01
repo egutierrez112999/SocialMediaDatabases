@@ -19,7 +19,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS likes (post_id INTEGER PRIMARY KEY, user
 cur.execute("CREATE TABLE IF NOT EXISTS blacklist (server_ID INTEGER, user_id INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS owners (server_id INTEGER PRIMARY KEY, user_id INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS friends (user_id INTEGER, friend_user_id INTEGER)")
-cur.execute("CREATE TABLE IF NOT EXISTS channels (channel_id INTEGER PRIMARY KEY, server_id INTEGER)")
+cur.execute("CREATE TABLE IF NOT EXISTS channels (channel_id INTEGER PRIMARY KEY, channel_name TEXT, server_id INTEGER)")
 
 #insert Users
 cur.execute("INSERT INTO users (user_id, username, email, date_created, password) VALUES (1000, 'usidorethewizard', 'colby@gmail.com', 'feb_29_2023', 'asdf')")
@@ -31,15 +31,50 @@ cur.execute("INSERT INTO users (user_id, username, email, date_created, password
 con.commit()
 
 #insert servers
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2000, 'cs', 1000)")
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2000, 'cs', 1001)")
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2000, 'cs', 1002)")
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2000, 'cs', 1003)")
 cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2000, 'cs', 1004)")
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2000, 'cs', 1005)")
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2002, 'research_seminar', 1000)")
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2002, 'research_seminar', 1001)")
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2002, 'research_seminar', 1003)")
+cur.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (2002, 'research_seminar', 1005)")
 con.commit()
+
 #insert friends
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1000, 1001)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1001, 1000)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1000, 1002)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1002, 1000)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1000, 1003)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1003, 1000)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1000, 1004)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1004, 1000)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1000, 1005)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1005, 1000)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1003, 1005)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1005, 1003)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1001, 1005)")
+cur.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (1005, 1001)")
+con.commit()
 
 #insert owners
+cur.execute("INSERT INTO owners (server_id, user_id) VALUES (2000, 1003)")
+cur.execute("INSERT INTO owners (server_id, user_id) VALUES (2001, 1005)")
+con.commit()
 
 #insert blacklist
+cur.execute("INSERT INTO blacklist (server_id, user_id) VALUES (2001, 1002)")
+cur.execute("INSERT INTO blacklist (server_id, user_id) VALUES (2001, 1004)")
+con.commit()
 
 #insert channels
+cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20010, 'teachers', 2001)")
+cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20011, 'students', 2001)")
+cur.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (20012, 'supervisors', 2001)")
+con.commit()
 
 #insert posts
 
