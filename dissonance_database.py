@@ -58,9 +58,23 @@ class DissDB:
                 print("Successfully made Post")
 
 
-    def likeDislikePost(self):
-        pass
-
+    def likeDislikePost(self, post_id, user_id, gusto):
+        pdata = [post_id]
+        self.cursor.execute("SELECT user_id FROM likes WHERE post_id = ?", pdata)
+        found = self.cursor.fetchall()
+        for i in found:
+            if (i[0] == user_id):
+                return
+        if(gusto):
+            data = [post_id, user_id]
+            self.cursor.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (?, ?, 1, 0)", data)
+            self.connection.commit()
+            print("Post Liked")
+        elif gusto == 0:
+            data = [post_id, user_id]
+            self.cursor.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (?, ?, 0, 1)", data)
+            self.connection.commit()
+            print("Post Disliked")
 
     def getFeedChannel(self, user_id, channel_name):
         cdata = [channel_name]
@@ -137,3 +151,7 @@ db = DissDB()
 #print(db.getFeedChannel(1000, 'discussion'))
 #db.createPost(1000, 20020, "I love fruit")
 #print(db.getFeedChannel(1000, 'discussion'))
+
+#db.joinServer(1002,2002, 'research_seminar')
+#db.likeDislikePost(3000, 1002 ,1);
+#db.likeDislikePost(3000, 1002 ,0);
