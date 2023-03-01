@@ -56,9 +56,11 @@ class DissDB:
         if(member):
                 #create post
                 post_id = random.randint(3000, 3999)
-                timestamp = time.time()
+                timestamp = int(time.time())
                 data = [post_id, channel_id, server_id, user_id, message, timestamp]
+                pdata = [post_id]
                 self.cursor.execute("INSERT INTO posts (post_id, channel_id, server_id, user_id, message, timestamp) VALUES (?, ?, ?, ?, ?, ?)", data)
+                self.cursor.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (?, 0, 0, 0)",pdata)
                 self.connection.commit()
                 print("Successfully made Post")
 
@@ -95,7 +97,7 @@ class DissDB:
         if(member):
                 #if they are a member, show them their feed
                 data = [chdata[0][0]]
-                self.cursor.execute("SELECT u.username, message FROM posts JOIN users AS u ON posts.user_id = u.user_id WHERE channel_id = ? ORDER BY timestamp ASC LIMIT 10", data)
+                self.cursor.execute("SELECT u.username, message, SUM(like) AS likes, SUM(dislike) as dislikes FROM posts JOIN users AS u ON posts.user_id = u.user_id JOIN likes AS l ON posts.post_id = l.post_id WHERE channel_id = ? ORDER BY timestamp ASC LIMIT 10",data)
                 return self.cursor.fetchall()
 
 
@@ -151,7 +153,12 @@ class DissDB:
             return
         print('YOU ARE NOT THE OWNER')
 
+        def IntQuery1(self):
+            #maybe if you are a owner, you can see all of the banned users?
+            pass
 
+        def IntQuery2(self):
+            pass
 
 db = DissDB()
 #db.createUser('cool_dude', 'cd@dude.com', 'feb_29_2023', 'iamacooldude')
@@ -170,9 +177,9 @@ db = DissDB()
 #print(db.getServerMembers(2002))
 #db.joinServer(1000,2000, 'cs')
 
-#print(db.getFeedChannel(1000, 'discussion'))
-#db.createPost(1000, 20020, "I love fruit")
-#print(db.getFeedChannel(1000, 'discussion'))
+print(db.getFeedChannel(1000, 'discussion'))
+db.createPost(1000, 20020, "I love fruit")
+print(db.getFeedChannel(1000, 'discussion'))
 
 #db.joinServer(1002,2002, 'research_seminar')
 #db.likeDislikePost(3000, 1002 ,1);
