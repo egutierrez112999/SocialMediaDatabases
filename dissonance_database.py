@@ -20,12 +20,14 @@ class DissDB:
         return self.cursor.fetchone()
 
     def createUser(self, username, email, date_created, password):
+        #create a user
         user_id = random.randint(1005,99999)
         data = [user_id, username, email, date_created, password]
         self.cursor.execute("INSERT INTO users (user_id, username, email, date_created, password) VALUES (?,?,?,?,?)", data)
         self.connection.commit()
 
     def addFriend(self, user_id, friend_id):
+        #add friends
         data = [user_id, friend_id]
         fdata = [friend_id, user_id]
         self.cursor.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (?, ?)",data)
@@ -33,6 +35,7 @@ class DissDB:
         self.connection.commit()
 
     def getFriends(self, user_id):
+        #show friends
         data = [user_id]
         self.cursor.execute("SELECT users.username, friend_user_id, fu.username FROM users JOIN friends ON users.user_id = friends.user_id JOIN users AS fu ON friends.friend_user_id = fu.user_id WHERE friends.user_id = ?", data)
         friends = self.cursor.fetchall()
@@ -40,6 +43,7 @@ class DissDB:
         
 
     def createPost(self, user_id, channel_id, message):
+        #check to see if they are a member of the server
         cdata = [channel_id]
         self.cursor.execute("SELECT server_id FROM channels WHERE channel_id = ?",cdata)
         chdata = self.cursor.fetchone()
@@ -50,6 +54,7 @@ class DissDB:
             if user_id == i[0]:
                 member = True
         if(member):
+                #create post
                 post_id = random.randint(3000, 3999)
                 timestamp = time.time()
                 data = [post_id, channel_id, server_id, user_id, message, timestamp]
@@ -59,24 +64,26 @@ class DissDB:
 
 
     def likeDislikePost(self, post_id, user_id, gusto):
+        #check to see if the user has liked or dislike the post yet
         pdata = [post_id]
         self.cursor.execute("SELECT user_id FROM likes WHERE post_id = ?", pdata)
         found = self.cursor.fetchall()
         for i in found:
             if (i[0] == user_id):
                 return
-        if(gusto):
+        if(gusto):#like the post
             data = [post_id, user_id]
             self.cursor.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (?, ?, 1, 0)", data)
             self.connection.commit()
             print("Post Liked")
-        elif gusto == 0:
+        elif gusto == 0:#dislike the post
             data = [post_id, user_id]
             self.cursor.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (?, ?, 0, 1)", data)
             self.connection.commit()
             print("Post Disliked")
 
     def getFeedChannel(self, user_id, channel_name):
+        #Check if user is a member of the server
         cdata = [channel_name]
         self.cursor.execute("SELECT channel_id, server_id FROM channels WHERE channel_name = ?",cdata)
         chdata = self.cursor.fetchall()
@@ -86,12 +93,14 @@ class DissDB:
             if user_id == i[0]:
                 member = True
         if(member):
+                #if they are a member, show them their feed
                 data = [chdata[0][0]]
                 self.cursor.execute("SELECT u.username, message FROM posts JOIN users AS u ON posts.user_id = u.user_id WHERE channel_id = ? ORDER BY timestamp ASC LIMIT 10", data)
                 return self.cursor.fetchall()
 
 
     def joinServer(self, user_id, server_id, server_name):
+        #check if user has been blacklisted
         sdata = [server_id]
         self.cursor.execute("SELECT user_id FROM blacklist WHERE server_id = ?", sdata)
         blacklisted_users = self.cursor.fetchall()
@@ -99,12 +108,14 @@ class DissDB:
             if i[0] == user_id:
                 print("Cannot Join Because You have Been Banned")
                 return
+        #check if user is already a member
         server_members = self.getServerMembers(server_id)
         member = False
         for i in server_members:
             if user_id == i[0]:
                 member = True
         if(member == False):
+            #join Server
             data = [server_id, server_name, user_id]
             self.cursor.execute("INSERT INTO servers (server_id, server_name, user_id) VALUES (?, ?, ?)", data)
             self.connection.commit()
@@ -114,21 +125,25 @@ class DissDB:
         
 
     def getServerMembers(self, server_id):
+        #get members for a given server
         data = [server_id]
         self.cursor.execute("SELECT user_id FROM servers WHERE server_id = ?", data)
         return self.cursor.fetchall()
 
     def getChannels(self, server_id):
+        #get channels for a given server
         data = [server_id]
         self.cursor.execute("SELECT * FROM channels WHERE server_id = ?", data)
         return self.cursor.fetchall()
 
     def addChannel(self, user_id, channel_id, channel_name, server_id):
+        #test to see if user is owner
         server_data = [server_id]
         self.cursor.execute("SELECT user_id FROM owners WHERE server_id = ?", server_data)
         server_owner = self.cursor.fetchone()
         owner = (user_id == server_owner[0])
         if (owner):
+            #if owner, create channel
             data = [channel_id, channel_name, server_id]
             self.cursor.execute("INSERT INTO channels (channel_id, channel_name, server_id) VALUES (?, ?, ?)",data)
             self.connection.commit()
@@ -159,6 +174,6 @@ db = DissDB()
 #db.createPost(1000, 20020, "I love fruit")
 #print(db.getFeedChannel(1000, 'discussion'))
 
-db.joinServer(1002,2002, 'research_seminar')
+#db.joinServer(1002,2002, 'research_seminar')
 #db.likeDislikePost(3000, 1002 ,1);
 #db.likeDislikePost(3000, 1002 ,0);
