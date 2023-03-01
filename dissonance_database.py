@@ -14,9 +14,9 @@ class DissDB:
         self.cursor.execute("SELECT * FROM users")
         return self.cursor.fetchall()
 
-    def getOneUser(self, userID):
-        data = [userID]
-        self.cursor.execute("SELECT * FROM users WHERE user_id = ?", data)
+    def getOneUser(self, user_name):
+        data = [user_name]
+        self.cursor.execute("SELECT * FROM users WHERE user_name = ?", data)
         return self.cursor.fetchone()
 
     def createUser(self, username, email, date_created, password):
@@ -32,6 +32,7 @@ class DissDB:
         fdata = [friend_id, user_id]
         self.cursor.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (?, ?)",data)
         self.cursor.execute("INSERT INTO friends (user_id, friend_user_id) VALUES (?, ?)",fdata)
+        print(f"Friendship Created between User {user_id} and User {friend_id}")
         self.connection.commit()
 
     def getFriends(self, user_id):
@@ -95,9 +96,10 @@ class DissDB:
             if user_id == i[0]:
                 member = True
         if(member):
+                print("\nGetting Feed:")
                 #if they are a member, show them their feed
                 data = [chdata[0][0]]
-                self.cursor.execute("SELECT u.username, message, SUM(like) AS likes, SUM(dislike) as dislikes FROM posts JOIN users AS u ON posts.user_id = u.user_id JOIN likes AS l ON posts.post_id = l.post_id WHERE channel_id = ? ORDER BY timestamp ASC LIMIT 10",data)
+                self.cursor.execute("SELECT u.username, message, SUM(like) AS likes, SUM(dislike) as dislikes FROM posts JOIN users AS u ON posts.user_id = u.user_id JOIN likes AS l ON posts.post_id = l.post_id WHERE channel_id = ? GROUP BY posts.post_id ORDER BY timestamp ASC LIMIT 10;",data)
                 return self.cursor.fetchall()
 
 
@@ -157,13 +159,23 @@ class DissDB:
             #maybe if you are a owner, you can see all of the banned users?
             pass
 
-        def IntQuery2(self):
-            pass
 
+
+
+
+
+#initialize Database Class
+print("Initializing DB....\n\n")
 db = DissDB()
-#db.createUser('cool_dude', 'cd@dude.com', 'feb_29_2023', 'iamacooldude')
-#print(db.getAllUsers())
-#print(db.getOneUser(1000))
+
+#Creating users
+print("---Testing Create Users-------")
+print("Current Users: "+db.getAllUsers())
+db.createUser('cool_dude', 'cd@dude.com', 'feb_29_2023', 'iamacooldude')
+db.createUser('dj', 'holt@gmail.com', 'feb_29_2023', 'applesux')
+db.createUser('bob', 'computerbob@gmail.com', 'feb_29_2023', 'password123')
+print(db.getAllUsers())
+
 #print(db.getFriends(1001))
 #db.addFriend(1001,1003)
 #print(db.getFriends(1001))
@@ -177,9 +189,9 @@ db = DissDB()
 #print(db.getServerMembers(2002))
 #db.joinServer(1000,2000, 'cs')
 
-print(db.getFeedChannel(1000, 'discussion'))
-db.createPost(1000, 20020, "I love fruit")
-print(db.getFeedChannel(1000, 'discussion'))
+#print(db.getFeedChannel(1000, 'discussion'))
+#db.createPost(1000, 20020, "I love fruit")
+#print(db.getFeedChannel(1000, 'discussion'))
 
 #db.joinServer(1002,2002, 'research_seminar')
 #db.likeDislikePost(3000, 1002 ,1);
