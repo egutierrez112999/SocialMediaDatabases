@@ -170,7 +170,7 @@ def displayList(lst):
 #initialize Database Class
 print("Initializing DB....\n\n")
 db = DissDB()
-
+'''
 #Creating users
 print("---Testing Create Users-------")
 print("Current Users: ")
@@ -214,3 +214,6 @@ db.joinServer(1000,2000, 'cs')
 print("\nJoining a Server not already joined: ")
 db.joinServer(1002,2002, 'research_seminar')
 displayList(db.getServerMembers(2002))
+'''
+
+
