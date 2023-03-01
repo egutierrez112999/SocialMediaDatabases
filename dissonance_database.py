@@ -27,6 +27,12 @@ class DissDB:
         self.connection.commit()
         print(f"User {username} created!")
 
+    def updateUser(self, user_id, username, email, password):
+        #all fields to update: id, name, everything else
+        data = [username, email ,password, user_id]
+        self.cursor.execute("UPDATE users SET =?, epasswd=?, firstname=?, lastname=? WHERE user_id = ?",data)
+        self.connection.commit()
+
     def addFriend(self, user_id, friend_id):
         #add friends
         data = [user_id, friend_id]
@@ -65,6 +71,18 @@ class DissDB:
                 self.cursor.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (?, 0, 0, 0)",pdata)
                 self.connection.commit()
                 print("Successfully made Post")
+
+    def deletePost(self, user_id, post_id):
+        data = [post_id]
+        self.cursor.execute("SELECT user_id FROM posts WHERE post_id = ?", data)
+        user = (self.cursor.fetchone())
+        if (user[0] == user_id):
+            self.cursor.execute("DELETE FROM posts WHERE post_id = ?", data)
+            self.cursor.execute("DELETE FROM likes WHERE post_id = ?", data)
+            self.connection.commit()
+            print(f"Post {post_id} Deleted")
+            return
+        print("Not the user of said post")
 
 
     def likeDislikePost(self, post_id, user_id, gusto):
@@ -197,6 +215,9 @@ db.likeDislikePost(3000, 1005 ,0);
 displayList(db.getFeedChannel(1000, 'discussion'))
 db.createPost(1000, 20020, "I love fruit")
 db.createPost(1001, 20020, "What is computer science?")
+displayList(db.getFeedChannel(1000, 'discussion'))
+db.deletePost(1001,3000)
+db.deletePost(1000,3000)
 displayList(db.getFeedChannel(1000, 'discussion'))
 
 
