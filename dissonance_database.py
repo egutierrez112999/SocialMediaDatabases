@@ -25,6 +25,7 @@ class DissDB:
         data = [user_id, username, email, date_created, password]
         self.cursor.execute("INSERT INTO users (user_id, username, email, date_created, password) VALUES (?,?,?,?,?)", data)
         self.connection.commit()
+        print(f"User {username} created!")
 
     def addFriend(self, user_id, friend_id):
         #add friends
@@ -161,7 +162,9 @@ class DissDB:
 
 
 
-
+def displayList(lst):
+    for i in lst:
+        print(i)
 
 
 #initialize Database Class
@@ -170,15 +173,29 @@ db = DissDB()
 
 #Creating users
 print("---Testing Create Users-------")
-print("Current Users: "+db.getAllUsers())
+print("Current Users: ")
+displayList(db.getAllUsers())
 db.createUser('cool_dude', 'cd@dude.com', 'feb_29_2023', 'iamacooldude')
 db.createUser('dj', 'holt@gmail.com', 'feb_29_2023', 'applesux')
 db.createUser('bob', 'computerbob@gmail.com', 'feb_29_2023', 'password123')
-print(db.getAllUsers())
+print("\nCurrent Users: ")
+displayList(db.getAllUsers())
 
-#print(db.getFriends(1001))
-#db.addFriend(1001,1003)
-#print(db.getFriends(1001))
+
+print("\n\n---Testing Relationships-------")
+print("Showing Friends For User sovietbear1945")
+displayList(db.getFriends(1001))
+db.addFriend(1001,1003)
+db.addFriend(1001,1002)
+displayList(db.getFriends(1001))
+
+
+print("\n\n---Testing Post and Feed Functionality-------")
+displayList(db.getFeedChannel(1000, 'discussion'))
+db.createPost(1000, 20020, "I love fruit")
+db.createPost(1001, 20020, "What is computer science?")
+displayList(db.getFeedChannel(1000, 'discussion'))
+db.likeDislikePost(3000, 1002 ,1);
 
 
 #print(db.getChannels(2000))
@@ -189,10 +206,3 @@ print(db.getAllUsers())
 #print(db.getServerMembers(2002))
 #db.joinServer(1000,2000, 'cs')
 
-#print(db.getFeedChannel(1000, 'discussion'))
-#db.createPost(1000, 20020, "I love fruit")
-#print(db.getFeedChannel(1000, 'discussion'))
-
-#db.joinServer(1002,2002, 'research_seminar')
-#db.likeDislikePost(3000, 1002 ,1);
-#db.likeDislikePost(3000, 1002 ,0);
