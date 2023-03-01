@@ -16,7 +16,7 @@ class DissDB:
 
     def getOneUser(self, user_name):
         data = [user_name]
-        self.cursor.execute("SELECT * FROM users WHERE user_name = ?", data)
+        self.cursor.execute("SELECT * FROM users WHERE username = ?", data)
         return self.cursor.fetchone()
 
     def createUser(self, username, email, date_created, password):
@@ -29,9 +29,12 @@ class DissDB:
 
     def updateUser(self, user_id, username, email, password):
         #all fields to update: id, name, everything else
-        data = [username, email ,password, user_id]
-        self.cursor.execute("UPDATE users SET =?, epasswd=?, firstname=?, lastname=? WHERE user_id = ?",data)
+        user = self.getOneUser(username)
+        data = [user[0], username, email ,user[3],password, user_id]
+        self.cursor.execute("UPDATE users SET user_id = ?, username = ?, email = ?, date_created=?, password=? WHERE user_id = ?",data)
         self.connection.commit()
+        print(f"User {username} successfully Updated")
+        print(self.getOneUser(username))
 
     def addFriend(self, user_id, friend_id):
         #add friends
@@ -188,7 +191,7 @@ def displayList(lst):
 #initialize Database Class
 print("Initializing DB....\n\n")
 db = DissDB()
-'''
+
 #Creating users
 print("---Testing Create Users-------")
 print("Current Users: ")
@@ -196,7 +199,11 @@ displayList(db.getAllUsers())
 db.createUser('cool_dude', 'cd@dude.com', 'feb_29_2023', 'iamacooldude')
 db.createUser('dj', 'holt@gmail.com', 'feb_29_2023', 'applesux')
 db.createUser('bob', 'computerbob@gmail.com', 'feb_29_2023', 'password123')
-print("\nCurrent Users: ")
+print("Current Users: ")
+displayList(db.getAllUsers())
+print("Updating User Soviet Bear: ")
+db.updateUser(1001, 'sovietbear1945', 'bear@gmail.com', 'password123')
+print("Current Users: ")
 displayList(db.getAllUsers())
 
 
@@ -235,6 +242,5 @@ db.joinServer(1000,2000, 'cs')
 print("\nJoining a Server not already joined: ")
 db.joinServer(1002,2002, 'research_seminar')
 displayList(db.getServerMembers(2002))
-'''
 
 
