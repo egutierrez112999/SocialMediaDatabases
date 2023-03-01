@@ -82,7 +82,6 @@ cur.execute("INSERT INTO posts (post_id, channel_id, server_id, user_id, message
 con.commit()
 #insert likes
 cur.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (3000, 1003, 1, 0)")
-cur.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (3000, 1005, 1, 0)")
 cur.execute("INSERT INTO likes (post_id, user_id, like, dislike) VALUES (3000, 1001, 0, 1)")
 con.commit()
 

@@ -192,17 +192,25 @@ displayList(db.getFriends(1001))
 
 print("\n\n---Testing Post and Feed Functionality-------")
 displayList(db.getFeedChannel(1000, 'discussion'))
+db.likeDislikePost(3000, 1005 ,1);
+db.likeDislikePost(3000, 1005 ,0);
+displayList(db.getFeedChannel(1000, 'discussion'))
 db.createPost(1000, 20020, "I love fruit")
 db.createPost(1001, 20020, "What is computer science?")
 displayList(db.getFeedChannel(1000, 'discussion'))
-db.likeDislikePost(3000, 1002 ,1);
 
 
-#print(db.getChannels(2000))
-#db.addChannel(1000, 20005, 'volunteers', 2000)
-#db.addChannel(1003, 20005, 'volunteers', 2000)
-#print(db.getChannels(2000))
-
-#print(db.getServerMembers(2002))
-#db.joinServer(1000,2000, 'cs')
-
+print("\n\n---Testing Other Functionality-------")
+displayList(db.getChannels(2000))
+print("Non Owner Creating a new channel: ")
+db.addChannel(1000, 20005, 'volunteers', 2000)
+print("Owner Creating a new channel: ")
+db.addChannel(1003, 20005, 'volunteers', 2000)
+displayList(db.getChannels(2000))
+print("\nGetting Server Members: ")
+displayList(db.getServerMembers(2002))
+print("\nJoining a Server as a member already: ")
+db.joinServer(1000,2000, 'cs')
+print("\nJoining a Server not already joined: ")
+db.joinServer(1002,2002, 'research_seminar')
+displayList(db.getServerMembers(2002))
