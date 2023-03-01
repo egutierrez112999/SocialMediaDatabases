@@ -1,0 +1,8 @@
+CREATE TABLE servers (server_id INTEGER PRIMARY KEY, user_id INTEGER, date_created TEXT);
+CREATE TABLE users (user_id INTEGER PRIMARY KEY, username TEXT, email TEXT, date_created TEXT, password TEXT);
+CREATE TABLE posts (post_id INTEGER PRIMARY KEY, channel_id INTEGER, server_id INTEGER, user_id INTEGER, message TEXT, timestamp VARCHAR(30));
+CREATE TABLE likes (post_id INTEGER PRIMARY KEY, user_id INTEGER, like INTEGER, dislike INTEGER);
+CREATE TABLE blacklist (server_ID INTEGER, user_id INTEGER);
+CREATE TABLE owners (server_id INTEGER PRIMARY KEY, user_id INTEGER);
+CREATE TABLE friends (user_id INTEGER, friend_user_id INTEGER);
+CREATE TABLE channels (channel_id INTEGER PRIMARY KEY, server_id INTEGER);
