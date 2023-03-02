@@ -10,12 +10,6 @@ You can find our schema in schema.txt
 To Run Tests:
 1. Run setup.py
 	- This file will setup the database
-2. Run server.py
-	- This is our UI for our social Network
-
-
-
-
 2. Run dissonance_database.db
 	- This fill will run the tests automatically
 
